@@ -1,27 +1,16 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
-env:
-  NODE_ENV: production
+  workflow_dispatch:
 jobs:
-  build:
-    if: github.ref == 'refs/heads/main'
-    env:
-      BUILD_ID: 123
+  test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm test
-  deploy:
-    needs: build
-    environment: production
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Deploying"
-        if: success()
-        env:
-          DEPLOY_TARGET: prod
+      - name: Run test
+        run: npm test
+      - run: echo "done"
